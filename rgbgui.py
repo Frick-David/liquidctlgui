@@ -44,6 +44,9 @@ class Rgbgui(object):
 			'marquee-<length>',]
 			# Add the other modes.
 
+		# for-loop the mode as each of their own widget say button to 
+		# activate then add them to the window etc.
+
 	def scale_labels(self):
 		self.speed_scale.config(label=speed_labels[int(value)])
 
