@@ -1,4 +1,4 @@
-\
+import tkinter as tk
 from tkinter import Tk, Label, Button, LEFT, RIGHT, Frame, YES, NO, BOTH
 from tkinter import W
 from tkinter import ttk, Scale
@@ -11,10 +11,17 @@ class Rgbgui(object):
 		master.title('GUI to control RGB')
 
 		tab_control = ttk.Notebook(master)
-		tab_presets = ttk.Frame(tab_control)
+
+		tab_presets = tk.Frame(tab_control, background='bisque')
 		tab_control.add(tab_presets, text='Presets')
 		tab_control.pack(expand=1, fill='both')
-		tab_settings = ttk.Frame(tab_control)
+
+                tab_profile = tk.Frame(tab_control, background='bisque')
+                tab_control.add(tab_profile, text='Profile')
+
+
+
+		tab_settings = tk.Frame(tab_control, background='bisque')
 		tab_control.add(tab_settings, text='Settings')
 		tab_control.pack(expand=1, fill='both')
 
@@ -48,16 +55,7 @@ class Rgbgui(object):
 class Window(Frame):
 	def __init__(self, master=None, cnf={}, **kw):
 		super().__init__(master, cnf, **kw)
-		self.open = Button(self, text='Pick a color', command=self.pick_color)
-		self.exit = Button(self, text='Exit', command=self.quit)
-
-		for b in (self.open, self.exit):
-			b.pack(side=LEFT, expand=YES, fill=BOTH)
 		self.pack()
-
-
-	def pick_color(self):
-		print(askcolor(parent=self, title='Pick a color'))
 
 
 instance = Tk()
