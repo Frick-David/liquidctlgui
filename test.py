@@ -2,7 +2,13 @@ import PySimpleGUI as sg
 
 sg.change_look_and_feel('DarkAmber')	# Add a touch of color
 
-tab1_layout =  [[sg.T('This is inside tab 1')]]
+# TODO: Add other modes
+modes = ['off', 'fixed', 'super-fixed', 'fading', 'spectrum-wave',
+        'backwards-spectrum-wave', 'super-wave', 'backwards-super-wave',
+        'marquee-<length>']
+
+tab1_layout =  [[sg.Combo(modes), sg.VerticalSeparator(pad=(5,5)),
+                 sg.Slider(range=(0,5), default_value=0, size=(10, 20), orientation='vertical')]]
 tab2_layout = [[sg.T('This is inside tab 2')],
                [sg.In(key='in')]]
 
@@ -26,7 +32,7 @@ layout = [[sg.TabGroup([[sg.Tab('Presets', tab1_layout), sg.Tab('Settings', tab2
 
 
 # Create the Window
-window = sg.Window('Window Title', layout)
+window = sg.Window('Liquidctl GUI', layout)
 
 # Event Loop to process "events" and get the "values" of the inputs
 while True:
