@@ -7,11 +7,6 @@ modes = ['off', 'fixed', 'super-fixed', 'fading', 'spectrum-wave',
         'backwards-spectrum-wave', 'super-wave', 'backwards-super-wave',
         'marquee-<length>']
 
-tab1_layout =  [[sg.Combo(modes), sg.VerticalSeparator(pad=(5,5)),
-                 sg.Slider(range=(0,5), default_value=0, size=(10, 20), orientation='vertical')]]
-tab2_layout = [[sg.T('This is inside tab 2')],
-               [sg.In(key='in')]]
-
 # Code to set the Speed of RGB
 speed_labels = {
     0: 'fastest',
@@ -21,6 +16,21 @@ speed_labels = {
     4: 'slowest',
 }
 
+speeds = [[sg.T('Fastest')],
+         [sg.T('')],
+         [sg.T('-------')],
+         [sg.T('')],
+         [sg.T('--------------')],
+         [sg.T('')],
+         [sg.T('-------')],
+         [sg.T('')],
+         [sg.T('Slowest')]]
+
+tab1_layout =  [[sg.Combo(modes), sg.VerticalSeparator(pad=(5,5)),
+                 sg.Slider(range=(0,4), default_value=2, size=(10, 20), orientation='vertical'),
+                 sg.Column(speeds)]]
+tab2_layout = [[sg.T('This is inside tab 2')],
+               [sg.In(key='in')]]
 
 # Presets include fixed (1 color), breathing (up to 9 colors, logo plus each ring),
 # fading (between two and eight colors), marquee, covering marquee,
