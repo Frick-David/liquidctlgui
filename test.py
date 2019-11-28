@@ -31,9 +31,9 @@ mode_and_leds = [[sg.Combo(modes)]]
 for led in leds:
     mode_and_leds.append([sg.T(led), sg.Input(key='Color'.join(led)), sg.ColorChooserButton('Input', target='Color'.join(led))])
 
-tab1_layout =  [[sg.Column(mode_and_leds), sg.VerticalSeparator(pad=(5,5)),
-                 sg.Slider(range=(0,4), default_value=2, size=(10, 20), orientation='vertical'),
-                 sg.Column(speeds)]]
+tab1_layout =  [[sg.Column(mode_and_leds), sg.VerticalSeparator(pad=(5,5)), sg.Column([[sg.Text('Speed')],
+                 [sg.Column([[sg.Slider(range=(0,4), default_value=2, size=(10, 20), orientation='vertical')]]), sg.Column(speeds)]])]]
+
 tab2_layout = [[sg.T('This is inside tab 2')],
                [sg.In(key='in')]]
 
