@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 
-sg.change_look_and_feel('DarkAmber')	# Add a touch of color
+sg.change_look_and_feel('Reddit')	# Add a touch of color
 
 # TODO: Add other modes
 modes = ['off', 'fixed', 'super-fixed', 'fading', 'spectrum-wave',
@@ -16,6 +16,7 @@ speed_labels = {
     4: 'slowest',
 }
 
+
 speeds = [[sg.T('Fastest')],
          [sg.T('')],
          [sg.T('- - -')],
@@ -28,7 +29,7 @@ speeds = [[sg.T('Fastest')],
 
 mode_and_leds = [[sg.Combo(modes)]]
 for led in leds:
-    mode_and_leds.append([sg.T(led), sg.Input('Hex Color')])
+    mode_and_leds.append([sg.T(led), sg.Input(key='Color'.join(led)), sg.ColorChooserButton('Input', target='Color'.join(led))])
 
 tab1_layout =  [[sg.Column(mode_and_leds), sg.VerticalSeparator(pad=(5,5)),
                  sg.Slider(range=(0,4), default_value=2, size=(10, 20), orientation='vertical'),
