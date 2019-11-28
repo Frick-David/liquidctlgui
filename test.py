@@ -6,7 +6,7 @@ sg.change_look_and_feel('DarkAmber')	# Add a touch of color
 modes = ['off', 'fixed', 'super-fixed', 'fading', 'spectrum-wave',
         'backwards-spectrum-wave', 'super-wave', 'backwards-super-wave',
         'marquee-<length>']
-
+leds = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 # Code to set the Speed of RGB
 speed_labels = {
     0: 'fastest',
@@ -18,15 +18,19 @@ speed_labels = {
 
 speeds = [[sg.T('Fastest')],
          [sg.T('')],
-         [sg.T('-------')],
+         [sg.T('- - -')],
          [sg.T('')],
-         [sg.T('--------------')],
+         [sg.T('- - - - - -')],
          [sg.T('')],
-         [sg.T('-------')],
+         [sg.T('- - -')],
          [sg.T('')],
          [sg.T('Slowest')]]
 
-tab1_layout =  [[sg.Combo(modes), sg.VerticalSeparator(pad=(5,5)),
+mode_and_leds = [[sg.Combo(modes)]]
+for led in leds:
+    mode_and_leds.append([sg.T(led), sg.Input('Hex Color')])
+
+tab1_layout =  [[sg.Column(mode_and_leds), sg.VerticalSeparator(pad=(5,5)),
                  sg.Slider(range=(0,4), default_value=2, size=(10, 20), orientation='vertical'),
                  sg.Column(speeds)]]
 tab2_layout = [[sg.T('This is inside tab 2')],
