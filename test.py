@@ -1,11 +1,18 @@
 import PySimpleGUI as sg
+from wrapper import device_descs
 
-sg.change_look_and_feel('Reddit')	# Add a touch of color
+# Want to trouble shoot code heree
+# if os.environ.get('DISPLAY','') == '':
+#     print('no display found. Using non-interactive Agg backend')
+
+# Add a touch of color
+sg.change_look_and_feel('Reddit')
 
 # TODO: Add other modes
 modes = ['off', 'fixed', 'super-fixed', 'fading', 'spectrum-wave',
         'backwards-spectrum-wave', 'super-wave', 'backwards-super-wave',
         'marquee-<length>']
+
 leds = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 # Code to set the Speed of RGB
 speed_labels = {
@@ -37,12 +44,20 @@ tab1_layout =  [[sg.Column(mode_and_leds), sg.VerticalSeparator(pad=(5,5)), sg.C
 tab2_layout = [[sg.T('This is inside tab 2')],
                [sg.In(key='in')]]
 
+devices_tab = [[sg.T('Detected Devices')]]
+i = 1
+for desc in device_descs:
+    devices_tab.append([sg.Frame(title='Device ' + str(i), layout=[[sg.T(desc)]])])
+    i += 1
+
 # Presets include fixed (1 color), breathing (up to 9 colors, logo plus each ring),
 # fading (between two and eight colors), marquee, covering marquee,
 # pulse (up to eight colors), spectrum, alternating, candle, wings.
 
 # All the stuff inside your window.
-layout = [[sg.TabGroup([[sg.Tab('Presets', tab1_layout), sg.Tab('Settings', tab2_layout)]])],
+layout = [[sg.TabGroup([[sg.Tab('Presets', tab1_layout),
+                         sg.Tab('Settings', tab2_layout),
+                         sg.Tab('Devices', devices_tab)]])],
               [sg.Button('Read')]]
 
 

@@ -25,6 +25,7 @@ class Rgbgui(object):
 		tab_control.add(tab_settings, text='Settings')
 		tab_control.pack(expand=1, fill='both')
 
+
 		# Code to set the Speed of RGB
 		speed_labels = {
 			0: 'fastest',
