@@ -1,93 +1,50 @@
-import PySimpleGUI as sg
-# from wrapper import device_descs
+'''
+Main file to run the GUI program
+'''
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTabWidget, QVBoxLayout, QPushButton
+from PyQt5.QtGui import QIcon
 
-# Want to trouble shoot code heree
-# if os.environ.get('DISPLAY','') == '':
-#     print('no display found. Using non-interactive Agg backend')
+# Will want to import settings here
 
-# Add a touch of color
-sg.change_look_and_feel('Reddit')
+class App(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.title = 'Liquidctl'
+        self.left = 10
+        self.top = 10
+        self.width = 640
+        self.height = 480
+        self.layout = QVBoxLayout(self)
 
-# Hue 2
-# Rainbow, blackout, backwards-marquee-<length>, covering-marquee,
-# covering-backwards-marquee, alternating, moving-alternating,
-# backwards-moving-alternating, breathing, super-breathing,
-# pulse, candle, wings
-modes = ['off', 'fixed', 'super-fixed', 'fading', 'spectrum-wave',
-        'backwards-spectrum-wave', 'super-wave', 'backwards-super-wave',
-        'marquee-<length>']
-# NXZT smart device v2 -
-# alternating-<length>, moving-alternating-<length>,
-# backwards-moving-alternating-<length>, starry-night,
-# rainbow-flow, backwards-rainbow-flox,
-# super-rainbow, backwards-super-rainbow,
-# rainbow-pulse, backwards-rainbow-pulse
-# wings
+        # Initialize Tab screen
+        self.tabs = QTabWidget()
+        self.tab1 = QWidget()
+        self.tab2 = QWidget()
+        self.tabs.resize(300, 200)
 
-leds = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
-# Code to set the Speed of RGB
-speed_labels = {
-    0: 'fastest',
-    1: 'faster',
-    2: 'normal',
-    3: 'slower',
-    4: 'slowest',
-}
+        # Add tabs
+        self.tabs.addTab(self.tab1, "Tab 1")
+        self.tabs.addTab(self.tab2, "Tab 2")
 
+        # Create First Tab
+        self.tab1.layout = QVBoxLayout(self)
+        self.pushButton1 = QPushButton("PyQt5 button")
+        self.tab1.layout.addWidget(self.pushButton1)
+        self.tab1.setLayout(self.tab1.layout)
 
-speeds = [[sg.T('Fastest')],
-         [sg.T('')],
-         [sg.T('- - -')],
-         [sg.T('')],
-         [sg.T('- - - - - -')],
-         [sg.T('')],
-         [sg.T('- - -')],
-         [sg.T('')],
-         [sg.T('Slowest')]]
+        # Add tabs to widget
+        self.layout.addWidget(self.tabs)
+        self.setLayout(self.layout)
 
-mode_and_leds = [[sg.Combo(modes)]]
-for led in leds:
-    mode_and_leds.append([sg.T(led), sg.Input(key='Color'.join(led)), sg.ColorChooserButton('Input', target='Color'.join(led))])
+        self.initUI()
 
-
-# RGB presets
-presents_tab =  [[sg.Column(mode_and_leds), sg.VerticalSeparator(pad=(5,5)), sg.Column([[sg.Text('Speed')],
-                 [sg.Column([[sg.Slider(range=(0,4), default_value=2, size=(10, 20), orientation='vertical')]]), sg.Column(speeds)]])]]
-
-
-# Should list all devices detected by Liquidctl
-# Need a --time-per-color preset --time-off
-# Need an --alert-color --alert-threshold
-devices_tab = [
-    [sg.T('Detected Devices')],
-    [sg.T('Will put liquidctl status information here')],
-]
-
-# Settings Tab - Fan Speed, Pump Speed
-settings_tab = [[sg.T('This is inside tab 2')],
-               [sg.In(key='in')]]
-
-# i = 1
-# for desc in device_descs:
-#     devices_tab.append([sg.Frame(title='Device ' + str(i), layout=[[sg.T(desc)]])])
-#     i += 1
-
-
-# All the stuff inside Main Window window.
-layout = [[sg.TabGroup([[sg.Tab('Presets', presents_tab),
-            sg.Tab('Devices', devices_tab),
-            sg.Tab('Settings', settings_tab),
-            ]])], [sg.Button('Read')]]
-
+    def initUI(self):
+        self.setWindowTitle(self.title)
+        self.setGeometry(self.left, self.top, self.width, self.height)        
+        self.show()
 
 if __name__ == '__main__':
-    # Create the Window
-    window = sg.Window('Liquidctl GUI', layout)
-    # Event Loop to process "events" and get the "values" of the inputs
-    while True:
-        event, values = window.read()
-        if event in (None, 'Cancel'):	# if user closes window or clicks cancel
-            break
-        print('You entered ', values[0])
-
-    window.close()
+    app = QApplication(sys.argv)
+    ex = App()
+    sys.exit(app.exec_())

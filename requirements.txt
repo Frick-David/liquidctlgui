@@ -1,2 +1,3 @@
-PySimpleGUI
+configparser
+pyqt5
 liquidctl

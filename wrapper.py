@@ -1,15 +1,13 @@
+'''
+File to provide the wrapper to the liquidctl API
+'''
 from liquidctl.driver import find_liquidctl_devices
-# if __name__ == '__main__':
-#  dirs = get_runtime_dirs()
-#  print(dirs)
-
 
 def list_devices():
      devices = []
      for dev in find_liquidctl_devices():
        devices.append(dev.description)
      return devices
-
 
  #  for dev in find_liquidctl_devices():
  #    dev.connect()
