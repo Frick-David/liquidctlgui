@@ -5,7 +5,6 @@ import sys
 from PyQt5 import QtCore
 
 class App(QMainWindow):
-
     def __init__(self, *args, **kwargs):
         super(App, self).__init__(*args, **kwargs)
         self.setWindowTitle("My Awesome App")
@@ -35,8 +34,8 @@ class App(QMainWindow):
 
         self.setStatusBar(QStatusBar(self))
         self.initUI()
-        
-        
+
+
     def onMyToolBarButtonClick(self, s):
         print("click", s)
 
