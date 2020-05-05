@@ -21,11 +21,13 @@ class App(QWidget):
         self.tabs = QTabWidget()
         self.tab1 = QWidget()
         self.tab2 = QWidget()
+        self.tab3 = QWidget()
         self.tabs.resize(300, 200)
 
         # Add tabs
-        self.tabs.addTab(self.tab1, "Tab 1")
-        self.tabs.addTab(self.tab2, "Tab 2")
+        self.tabs.addTab(self.tab1, "RGB")
+        self.tabs.addTab(self.tab2, "Pumps")
+        self.tabs.addTab(self.tab3, "Settings")
 
         # Create First Tab
         self.tab1.layout = QVBoxLayout(self)
