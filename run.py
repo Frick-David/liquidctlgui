@@ -1,9 +1,13 @@
 '''
 Main file to run the GUI program
 '''
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QTabWidget, QVBoxLayout, QPushButton
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QTabWidget,
+                             QVBoxLayout, QPushButton, QMainWindow, QLabel,
+                             QToolBar, QAction, QStatusBar, QSystemTrayIcon,
+                             QMenu)
 from PyQt5.QtGui import QIcon
+from PyQt5 import QtCore
+import sys
 
 # Will want to import settings here
 
@@ -39,11 +43,25 @@ class App(QWidget):
         self.layout.addWidget(self.tabs)
         self.setLayout(self.layout)
 
+        # Attribute for if a system tray can be used
+        self.has_systray = QSystemTrayIcon.isSystemTrayAvailable()
+
         self.initUI()
+
+    def set_sys_tray_icon(self):
+        if self.has_systray:
+            icon = QSystemTrayIcon(QIcon("icon.jpg"), self)
+            icon_menu = QMenu('Test')
+            icon_menu.addAction('Foo')
+            icon_menu.addSeparator()
+            icon_menu.addAction('Exit')
+            icon.setContextMenu(icon_menu)
+            icon.show()
 
     def initUI(self):
         self.setWindowTitle(self.title)
-        self.setGeometry(self.left, self.top, self.width, self.height)        
+        self.setGeometry(self.left, self.top, self.width, self.height)
+        self.set_sys_tray_icon()
         self.show()
 
 if __name__ == '__main__':
