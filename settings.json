@@ -3,4 +3,10 @@
   "LogLevel": "1",
   "RunStatus": "1",
   "MinimizeToTray": "False",
+  "RunAtStartup": "False",
+  "KeepUpdated" : "True",
+  "DeviceColors": "",
+  "FanSpeed": "",
+  "PumpSpeed": "",
+  "ReportBugs": "False",
 }
