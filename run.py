@@ -4,14 +4,15 @@ Main file to run the GUI program
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QTabWidget,
                              QVBoxLayout, QPushButton, QMainWindow, QLabel,
                              QToolBar, QAction, QStatusBar, QSystemTrayIcon,
-                             QMenu)
+                             QMenu, QCheckBox)
 from PyQt5.QtGui import QIcon
 from PyQt5 import QtCore
 import sys
 
-# Will want to import settings here
+from settings import load_settings, change_setting
 
 class App(QWidget):
+
     def __init__(self):
         super().__init__()
         self.title = 'Liquidctl'
@@ -39,6 +40,34 @@ class App(QWidget):
         self.tab1.layout.addWidget(self.pushButton1)
         self.tab1.setLayout(self.tab1.layout)
 
+        # Create the second tab
+
+        # Create the Settings Tab
+        self.tab3.layout = QVBoxLayout(self)
+        self.settings = load_settings()
+
+        self.checkbox1 = QCheckBox("Run at startup")
+        self.checkbox1.setChecked(bool(self.settings["RunAtStartup"]))
+        self.tab3.layout.addWidget(self.checkbox1)
+        self.checkbox1.stateChanged.connect(lambda: change_setting("RunAtStartup"))
+
+        self.checkbox2 = QCheckBox("Minimize to tray on close")
+        self.checkbox2.setChecked(bool(self.settings["MinimizeToTray"]))
+        self.tab3.layout.addWidget(self.checkbox2)
+        self.checkbox2.stateChanged.connect(lambda: change_setting("MinimizeToTray"))
+
+        self.checkbox3 = QCheckBox("Check for updates automatically")
+        self.checkbox3.setChecked(bool(self.settings["KeepUpdated"]))
+        self.tab3.layout.addWidget(self.checkbox3)
+        self.checkbox3.stateChanged.connect(lambda: change_setting("KeepUpdated"))
+
+        self.checkbox4 = QCheckBox("Report Errors")
+        self.checkbox4.setChecked(bool(self.settings["ReportBugs"]))
+        self.tab3.layout.addWidget(self.checkbox4)
+        self.checkbox4.stateChanged.connect(lambda: change_setting("ReportBugs"))
+
+        self.tab3.setLayout(self.tab3.layout)
+
         # Add tabs to widget
         self.layout.addWidget(self.tabs)
         self.setLayout(self.layout)
@@ -63,6 +92,7 @@ class App(QWidget):
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.set_sys_tray_icon()
         self.show()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

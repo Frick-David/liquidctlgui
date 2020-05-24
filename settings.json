@@ -2,11 +2,11 @@
   "Version": "0.01",
   "LogLevel": "1",
   "RunStatus": "1",
-  "MinimizeToTray": "False",
-  "RunAtStartup": "False",
-  "KeepUpdated" : "True",
-  "DeviceColors": "",
-  "FanSpeed": "",
-  "PumpSpeed": "",
-  "ReportBugs": "False",
+  "MinimizeToTray": "false",
+  "RunAtStartup": "false",
+  "KeepUpdated" : "true",
+  "DeviceColors": "1",
+  "FanSpeed": "1",
+  "PumpSpeed": "1",
+  "ReportBugs": "false"
 }
