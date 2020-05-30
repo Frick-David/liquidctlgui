@@ -1,3 +1,4 @@
 configparser
 pyqt5
+pyqtgraph
 liquidctl

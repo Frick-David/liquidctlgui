@@ -4,12 +4,17 @@ Main file to run the GUI program
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QTabWidget,
                              QVBoxLayout, QPushButton, QMainWindow, QLabel,
                              QToolBar, QAction, QStatusBar, QSystemTrayIcon,
-                             QMenu, QCheckBox)
+                             QMenu, QCheckBox, QColorDialog)
 from PyQt5.QtGui import QIcon
 from PyQt5 import QtCore
 import sys
+import logging
 
 from settings import load_settings, change_setting
+
+logging.basicConfig()
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 class App(QWidget):
 
@@ -36,8 +41,19 @@ class App(QWidget):
 
         # Create First Tab
         self.tab1.layout = QVBoxLayout(self)
-        self.pushButton1 = QPushButton("PyQt5 button")
-        self.tab1.layout.addWidget(self.pushButton1)
+        pushbutton1 = QPushButton("Color")
+        self.tab1.layout.addWidget(pushbutton1)
+        pushbutton1.clicked.connect(lambda: self.showColorDialog(pushbutton1))
+
+        pushbutton2 = QPushButton("Color")
+        self.tab1.layout.addWidget(pushbutton2)
+        pushbutton2.clicked.connect(lambda: self.showColorDialog(pushbutton2))
+
+        # color = QColorDialog()
+        # self.tab1.layout.addWidget(color)
+        pushbutton3 = QPushButton('Dialog', self)
+        self.tab1.layout.addWidget(pushbutton3)
+        pushbutton3.clicked.connect(lambda: self.showColorDialog(pushbutton3))
         self.tab1.setLayout(self.tab1.layout)
 
         # Create the second tab
@@ -92,6 +108,17 @@ class App(QWidget):
         self.setGeometry(self.left, self.top, self.width, self.height)
         self.set_sys_tray_icon()
         self.show()
+
+
+    def showColorDialog(self, button):
+        color = QColorDialog.getColor()
+
+        if color.isValid():
+            button.setStyleSheet('QWidget { background-color: %s }'
+                                   % color.name())
+            logger.info("Button has a color")
+
+
 
 
 if __name__ == '__main__':

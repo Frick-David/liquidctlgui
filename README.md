@@ -15,5 +15,13 @@ Roadmap
  - Have the system tray all set up
  - Have the settings saved to a file and save across runs
  - Run at startup if possible
-
-
+ - CPU Temp
+ - GPU Temp
+ - Liquid Temperature in pump
+ - RPM of fans
+ - Pump speed
+ - Stress Testing
+   - GPU?
+   - CPU
+   - Temperatures
+ - Documentation
