@@ -11,8 +11,6 @@ plt = pg.plot(x, y, title=title, pen='r')
 plt.showGrid(x=False,y=False)
 
 
-
-
 if __name__ == '__main__':
     import sys
     if sys.flags.interactive != 1 or not hasattr(pg.QtCore, 'PYQT_VERSION'):

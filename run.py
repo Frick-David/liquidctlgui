@@ -4,11 +4,14 @@ Main file to run the GUI program
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QTabWidget,
                              QVBoxLayout, QPushButton, QMainWindow, QLabel,
                              QToolBar, QAction, QStatusBar, QSystemTrayIcon,
-                             QMenu, QCheckBox, QColorDialog)
+                             QMenu, QCheckBox, QColorDialog, QDial)
 from PyQt5.QtGui import QIcon
-from PyQt5 import QtCore
+from PyQt5.QtChart import QChart, QChartView, QPieSeries, QPieSlice
+from PyQt5.QtCore import Qt
 import sys
 import logging
+import random
+import functools
 
 from settings import load_settings, change_setting
 
@@ -39,7 +42,7 @@ class App(QWidget):
         self.tabs.addTab(self.tab2, "Pumps")
         self.tabs.addTab(self.tab3, "Settings")
 
-        # Create First Tab
+        # Create RGB Tab
         self.tab1.layout = QVBoxLayout(self)
         pushbutton1 = QPushButton("Color")
         self.tab1.layout.addWidget(pushbutton1)
@@ -56,7 +59,33 @@ class App(QWidget):
         pushbutton3.clicked.connect(lambda: self.showColorDialog(pushbutton3))
         self.tab1.setLayout(self.tab1.layout)
 
-        # Create the second tab
+
+        # Create the Fan Speed and Pump Speed tab
+        self.tab2.layout = QVBoxLayout(self)
+        chartView = QChartView()
+        chart = chartView.chart()
+        minSize = 0.0
+        maxSize = 1.0
+        donutCount = 1
+        m_donuts = []
+        donut = QPieSeries()
+        sliceCount = 2
+        for j in range(sliceCount):
+            value = 90
+            slice = QPieSlice(str(value), value)
+            slice.angleSpan = 90
+            donut.append(slice)
+            donut.setHoleSize(0.9)
+            donut.setPieSize(minSize + (1 + 1) * (maxSize - minSize) / donutCount)
+            m_donuts.append(donut)
+            chartView.chart().addSeries(donut)
+        donut.setPieStartAngle(240)
+        donut.setPieEndAngle(90)
+        mainLayout = QVBoxLayout(self)
+        mainLayout.addWidget(chartView, 1)
+        chartView.show()
+        self.tab2.setLayout(mainLayout)
+
 
         # Create the Settings Tab
         self.tab3.layout = QVBoxLayout(self)
