@@ -147,10 +147,14 @@ class App(QWidget):
                                    % color.name())
             logger.info("Button has a color")
 
-
-
+    def get_devices(self):
+        from liquidctl.driver import find_liquidctl_devices
+        devices = find_liquidctl_devices()
+        for device in devices:
+            print(device)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = App()
+    ex.get_devices()
     sys.exit(app.exec_())
