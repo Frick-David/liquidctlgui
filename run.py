@@ -4,7 +4,7 @@ Main file to run the GUI program
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QTabWidget,
                              QVBoxLayout, QPushButton, QMainWindow, QLabel,
                              QToolBar, QAction, QStatusBar, QSystemTrayIcon,
-                             QMenu, QCheckBox, QColorDialog, QDial)
+                             QMenu, QCheckBox, QColorDialog, QDial, QLabel)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtChart import QChart, QChartView, QPieSeries, QPieSlice
 from PyQt5.QtCore import Qt
@@ -44,6 +44,9 @@ class App(QWidget):
 
         # Create RGB Tab
         self.tab1.layout = QVBoxLayout(self)
+        devices = self.get_devices()
+        for device in devices:
+            self.tab1.layout.addWidget(QLabel(device))
         pushbutton1 = QPushButton("Color")
         self.tab1.layout.addWidget(pushbutton1)
         pushbutton1.clicked.connect(lambda: self.showColorDialog(pushbutton1))
@@ -149,12 +152,13 @@ class App(QWidget):
 
     def get_devices(self):
         from liquidctl.driver import find_liquidctl_devices
-        devices = find_liquidctl_devices()
-        for device in devices:
+        devices = []
+        for device in find_liquidctl_devices():
+            devices.append(device.description.split("(")[0])
             print(device)
+        return devices 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = App()
-    ex.get_devices()
     sys.exit(app.exec_())
