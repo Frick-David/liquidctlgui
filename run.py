@@ -4,7 +4,8 @@ Main file to run the GUI program
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QTabWidget,
                              QVBoxLayout, QPushButton, QMainWindow, QLabel,
                              QToolBar, QAction, QStatusBar, QSystemTrayIcon,
-                             QMenu, QCheckBox, QColorDialog, QDial, QLabel)
+                             QMenu, QCheckBox, QColorDialog, QDial, QLabel,
+                             QBoxLayout)
 from PyQt5.QtGui import QIcon
 from PyQt5.QtChart import QChart, QChartView, QPieSeries, QPieSlice
 from PyQt5.QtCore import Qt
@@ -46,20 +47,13 @@ class App(QWidget):
         self.tab1.layout = QVBoxLayout(self)
         devices = self.get_devices()
         for device in devices:
-            self.tab1.layout.addWidget(QLabel(device))
-        pushbutton1 = QPushButton("Color")
-        self.tab1.layout.addWidget(pushbutton1)
-        pushbutton1.clicked.connect(lambda: self.showColorDialog(pushbutton1))
-
-        pushbutton2 = QPushButton("Color")
-        self.tab1.layout.addWidget(pushbutton2)
-        pushbutton2.clicked.connect(lambda: self.showColorDialog(pushbutton2))
-
-        # color = QColorDialog()
-        # self.tab1.layout.addWidget(color)
-        pushbutton3 = QPushButton('Dialog', self)
-        self.tab1.layout.addWidget(pushbutton3)
-        pushbutton3.clicked.connect(lambda: self.showColorDialog(pushbutton3))
+            box_layout = QVBoxLayout()
+            box_layout.addWidget(QLabel(device))
+            push_button = QPushButton("")
+            push_button.clicked.connect(lambda checked, btn=push_button: self.add_color_dialog(btn))
+            box_layout.addWidget(push_button)
+            # Add other stuff here for each device
+            self.tab1.layout.addLayout(box_layout)
         self.tab1.setLayout(self.tab1.layout)
 
 
@@ -141,22 +135,22 @@ class App(QWidget):
         self.set_sys_tray_icon()
         self.show()
 
-
-    def showColorDialog(self, button):
+    def add_color_dialog(self, button):
         color = QColorDialog.getColor()
 
         if color.isValid():
-            button.setStyleSheet('QWidget { background-color: %s }'
-                                   % color.name())
-            logger.info("Button has a color")
+            color_hex = color.name()
+
+            button.setStyleSheet('background-color: %s' % color_hex)
+            logger.info(" %s has been set to color: %s" % (button, color_hex))
 
     def get_devices(self):
         from liquidctl.driver import find_liquidctl_devices
         devices = []
         for device in find_liquidctl_devices():
             devices.append(device.description.split("(")[0])
-            print(device)
-        return devices 
+            logger.info(" Found: %s" % device)
+        return devices
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
