@@ -4,21 +4,12 @@ Main file to run the GUI program
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QTabWidget,
                              QVBoxLayout, QPushButton, QMainWindow, QLabel,
                              QToolBar, QAction, QStatusBar, QSystemTrayIcon,
-                             QMenu, QCheckBox, QColorDialog, QDial, QLabel,
-                             QBoxLayout)
+                             QMenu, QCheckBox)
 from PyQt5.QtGui import QIcon
-from PyQt5.QtChart import QChart, QChartView, QPieSeries, QPieSlice
-from PyQt5.QtCore import Qt
+from PyQt5 import QtCore
 import sys
-import logging
-import random
-import functools
 
 from settings import load_settings, change_setting
-
-logging.basicConfig()
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 class App(QWidget):
 
@@ -43,46 +34,13 @@ class App(QWidget):
         self.tabs.addTab(self.tab2, "Pumps")
         self.tabs.addTab(self.tab3, "Settings")
 
-        # Create RGB Tab
+        # Create First Tab
         self.tab1.layout = QVBoxLayout(self)
-        devices = self.get_devices()
-        for device in devices:
-            box_layout = QVBoxLayout()
-            box_layout.addWidget(QLabel(device))
-            push_button = QPushButton("")
-            push_button.clicked.connect(lambda checked, btn=push_button: self.add_color_dialog(btn))
-            box_layout.addWidget(push_button)
-            # Add other stuff here for each device
-            self.tab1.layout.addLayout(box_layout)
+        self.pushButton1 = QPushButton("PyQt5 button")
+        self.tab1.layout.addWidget(self.pushButton1)
         self.tab1.setLayout(self.tab1.layout)
 
-
-        # Create the Fan Speed and Pump Speed tab
-        self.tab2.layout = QVBoxLayout(self)
-        chartView = QChartView()
-        chart = chartView.chart()
-        minSize = 0.0
-        maxSize = 1.0
-        donutCount = 1
-        m_donuts = []
-        donut = QPieSeries()
-        sliceCount = 2
-        for j in range(sliceCount):
-            value = 90
-            slice = QPieSlice(str(value), value)
-            slice.angleSpan = 90
-            donut.append(slice)
-            donut.setHoleSize(0.9)
-            donut.setPieSize(minSize + (1 + 1) * (maxSize - minSize) / donutCount)
-            m_donuts.append(donut)
-            chartView.chart().addSeries(donut)
-        donut.setPieStartAngle(240)
-        donut.setPieEndAngle(90)
-        mainLayout = QVBoxLayout(self)
-        mainLayout.addWidget(chartView, 1)
-        chartView.show()
-        self.tab2.setLayout(mainLayout)
-
+        # Create the second tab
 
         # Create the Settings Tab
         self.tab3.layout = QVBoxLayout(self)
@@ -135,24 +93,72 @@ class App(QWidget):
         self.set_sys_tray_icon()
         self.show()
 
-    def add_color_dialog(self, button):
-        color = QColorDialog.getColor()
+from PyQt5 import QtCore, QtGui, QtWidgets
 
-        if color.isValid():
-            color_hex = color.name()
 
-            button.setStyleSheet('background-color: %s' % color_hex)
-            logger.info(" %s has been set to color: %s" % (button, color_hex))
+class TabBar(QtWidgets.QTabBar):
+    def tabSizeHint(self, index):
+        s = QtWidgets.QTabBar.tabSizeHint(self, index)
+        s.transpose()
+        return s
 
-    def get_devices(self):
-        from liquidctl.driver import find_liquidctl_devices
-        devices = []
-        for device in find_liquidctl_devices():
-            devices.append(device.description.split("(")[0])
-            logger.info(" Found: %s" % device)
-        return devices
+    def paintEvent(self, event):
+        painter = QtWidgets.QStylePainter(self)
+        opt = QtWidgets.QStyleOptionTab()
+
+        for i in range(self.count()):
+            self.initStyleOption(opt, i)
+            painter.drawControl(QtWidgets.QStyle.CE_TabBarTabShape, opt)
+            painter.save()
+
+            s = opt.rect.size()
+            s.transpose()
+            r = QtCore.QRect(QtCore.QPoint(), s)
+            r.moveCenter(opt.rect.center())
+            opt.rect = r
+
+            c = self.tabRect(i).center()
+            painter.translate(c)
+            painter.rotate(90)
+            painter.translate(-c)
+            painter.drawControl(QtWidgets.QStyle.CE_TabBarTabLabel, opt);
+            painter.restore()
+
+
+class TabWidget(QtWidgets.QTabWidget):
+    def __init__(self, *args, **kwargs):
+        QtWidgets.QTabWidget.__init__(self, *args, **kwargs)
+        self.setTabBar(TabBar(self))
+        self.setTabPosition(QtWidgets.QTabWidget.West)
+
+class ProxyStyle(QtWidgets.QProxyStyle):
+    def drawControl(self, element, opt, painter, widget):
+        if element == QtWidgets.QStyle.CE_TabBarTabLabel:
+            ic = self.pixelMetric(QtWidgets.QStyle.PM_TabBarIconSize)
+            r = QtCore.QRect(opt.rect)
+            w =  0 if opt.icon.isNull() else opt.rect.width() + self.pixelMetric(QtWidgets.QStyle.PM_TabBarIconSize)
+            r.setHeight(opt.fontMetrics.width(opt.text) + w)
+            r.moveBottom(opt.rect.bottom())
+            opt.rect = r
+        QtWidgets.QProxyStyle.drawControl(self, element, opt, painter, widget)
 
 if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = App()
+    import sys
+
+    app = QtWidgets.QApplication(sys.argv)
+    QtWidgets.QApplication.setStyle(ProxyStyle())
+    w = TabWidget()
+    w.addTab(QtWidgets.QWidget(), QtGui.QIcon("zoom.png"), "RGB Lights")
+    w.addTab(QtWidgets.QWidget(), QtGui.QIcon("zoom-in.png"), "Pump")
+    w.addTab(QtWidgets.QWidget(), QtGui.QIcon("zoom-out.png"), "Settings")
+
+    w.resize(640, 480)
+    w.show()
+
     sys.exit(app.exec_())
+
+
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     ex = App()
+#     sys.exit(app.exec_())
