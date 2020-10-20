@@ -93,10 +93,12 @@ class App(QWidget):
         self.set_sys_tray_icon()
         self.show()
 
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class TabBar(QtWidgets.QTabBar):
+
     def tabSizeHint(self, index):
         s = QtWidgets.QTabBar.tabSizeHint(self, index)
         s.transpose()
@@ -125,11 +127,13 @@ class TabBar(QtWidgets.QTabBar):
             painter.restore()
 
 
+
 class TabWidget(QtWidgets.QTabWidget):
     def __init__(self, *args, **kwargs):
         QtWidgets.QTabWidget.__init__(self, *args, **kwargs)
         self.setTabBar(TabBar(self))
         self.setTabPosition(QtWidgets.QTabWidget.West)
+
 
 class ProxyStyle(QtWidgets.QProxyStyle):
     def drawControl(self, element, opt, painter, widget):
@@ -142,22 +146,117 @@ class ProxyStyle(QtWidgets.QProxyStyle):
             opt.rect = r
         QtWidgets.QProxyStyle.drawControl(self, element, opt, painter, widget)
 
+
 if __name__ == '__main__':
     import sys
 
     app = QtWidgets.QApplication(sys.argv)
     QtWidgets.QApplication.setStyle(ProxyStyle())
     w = TabWidget()
-    w.addTab(QtWidgets.QWidget(), QtGui.QIcon("zoom.png"), "RGB Lights")
-    w.addTab(QtWidgets.QWidget(), QtGui.QIcon("zoom-in.png"), "Pump")
-    w.addTab(QtWidgets.QWidget(), QtGui.QIcon("zoom-out.png"), "Settings")
+    w.setStyleSheet("border: none;")
+
+    # RGB Widget
+    rgb_widget = QtWidgets.QWidget()
+    rgb_widget.layout = QVBoxLayout()
+    rgb_widget.label = QLabel("Placeholder Text")
+    rgb_widget.layout.addWidget(rgb_widget.label)
+    rgb_widget.setWindowTitle("Fan Control")
+    rgb_widget.setLayout(rgb_widget.layout)
+    # Add our RGB Widget to the main window
+    w.addTab(rgb_widget, QtGui.QIcon("icons/rgb-lights.png"), None)         # RGB Tab
+
+    # Fans Tab
+    fans_widget = QtWidgets.QWidget()
+    fans_widget.layout = QVBoxLayout()
+    fans_widget.label = QLabel("Placeholder Text")
+    fans_widget.layout.addWidget(fans_widget.label)
+    fans_widget.setWindowTitle("Fan Control")
+    fans_widget.setLayout(fans_widget.layout)
+    # Add our fan widget to the main window
+    w.addTab(fans_widget, QtGui.QIcon("icons/fans.png"), None)               # Fans tab
+
+    # Settings Tab
+    settings_widget = QtWidgets.QWidget()
+    settings_widget.layout = QVBoxLayout()
+    settings_widget.label = QLabel("Placeholder Text")
+    settings_widget.layout.addWidget(settings_widget.label)
+    settings_widget.setWindowTitle("Settings")
+    settings_widget.setLayout(settings_widget.layout)
+
+    # Create the Settings Tab
+    settings_widget.settings = load_settings()  # Incorporate this
+    settings_widget.checkbox1 = QCheckBox("Run at startup")
+    settings_widget.checkbox1.setChecked(bool(settings_widget.settings["RunAtStartup"]))
+    settings_widget.layout.addWidget(settings_widget.checkbox1)
+    settings_widget.checkbox1.stateChanged.connect(lambda: change_setting("RunAtStartup"))
+
+    settings_widget.checkbox2 = QCheckBox("Minimize to tray on close")
+    settings_widget.checkbox2.setChecked(bool(settings_widget.settings["MinimizeToTray"]))
+    settings_widget.layout.addWidget(settings_widget.checkbox2)
+    settings_widget.checkbox2.stateChanged.connect(lambda: change_setting("MinimizeToTray"))
+
+    settings_widget.checkbox3 = QCheckBox("Check for updates automatically")
+    settings_widget.checkbox3.setChecked(bool(settings_widget.settings["KeepUpdated"]))
+    settings_widget.layout.addWidget(settings_widget.checkbox3)
+    settings_widget.checkbox3.stateChanged.connect(lambda: change_setting("KeepUpdated"))
+
+    settings_widget.checkbox4 = QCheckBox("Report Errors")
+    settings_widget.checkbox4.setChecked(bool(settings_widget.settings["ReportBugs"]))
+    settings_widget.layout.addWidget(settings_widget.checkbox4)
+    settings_widget.checkbox4.stateChanged.connect(lambda: change_setting("ReportBugs"))
+
+    # Add our settings widget to the main window
+    w.addTab(settings_widget, QtGui.QIcon("icons/settings.jpg"), None)           # Settings Tab
+
 
     w.resize(640, 480)
     w.show()
 
     sys.exit(app.exec_())
 
+#
+# if __name__ == '__main__':
+#     app = QApplication(sys.argv)
+#     ex = App()
+#     sys.exit(app.exec_())
 
+
+
+#
+# # See if we can make the button border more or less invisible
+# # This looks better than the tab type things
+# import sys
+# from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
+# from PyQt5.QtGui import QIcon
+# from PyQt5.QtCore import pyqtSlot
+#
+# class App(QWidget):
+#
+#     def __init__(self):
+#         super().__init__()
+#         self.title = 'PyQt5 button - pythonspot.com'
+#         self.left = 10
+#         self.top = 10
+#         self.width = 320
+#         self.height = 200
+#         self.initUI()
+#
+#     def initUI(self):
+#         self.setWindowTitle(self.title)
+#         self.setGeometry(self.left, self.top, self.width, self.height)
+#
+#         button = QPushButton('PyQt5 button', self)
+#         button.setToolTip('This is an example button')
+#         button.setStyleSheet("border: none;")
+#         button.move(100,70)
+#         button.clicked.connect(self.on_click)
+#
+#         self.show()
+#
+#     @pyqtSlot()
+#     def on_click(self):
+#         print('PyQt5 button click')
+#
 # if __name__ == '__main__':
 #     app = QApplication(sys.argv)
 #     ex = App()
